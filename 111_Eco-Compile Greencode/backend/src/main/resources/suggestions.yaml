@@ -1,0 +1,108 @@
+NESTED_LOOP:
+  bigO: "O(n²)"
+  description: "Nested loops cause multiplicative execution time. As the input size (n) increases, the energy consumption grows quadratically."
+  codeSnippetBefore: |
+    for (int i = 0; i < list.size(); i++) {
+        for (int j = 0; j < list.size(); j++) {
+            // expensive operation
+        }
+    }
+  codeSnippetAfter: |
+    Map<String, Item> lookup = new HashMap<>();
+    for (Item item : list) lookup.put(item.getId(), item);
+    // Use lookup instead of inner loop
+
+BUSY_WAIT:
+  bigO: "O(infinite)"
+  description: "A busy-wait loop consumes 100% CPU cycles while waiting for a condition, leading to extreme energy waste and heat generation."
+  codeSnippetBefore: |
+    while (!condition) {
+        // do nothing
+    }
+  codeSnippetAfter: |
+    while (!condition) {
+        Thread.sleep(100); // Or use wait/notify
+    }
+
+LOOP_INVARIANT:
+  bigO: "O(n)"
+  description: "Moving calculations that don't change inside a loop to the outside prevents redundant CPU work per iteration."
+  codeSnippetBefore: |
+    for (int i = 0; i < n; i++) {
+        double val = Math.sqrt(constant_x); // Invariant
+        process(i, val);
+    }
+  codeSnippetAfter: |
+    double val = Math.sqrt(constant_x);
+    for (int i = 0; i < n; i++) {
+        process(i, val);
+    }
+
+STRING_CONCAT_IN_LOOP:
+  bigO: "O(n²)"
+  description: "Using + or += with Strings inside a loop creates a new String object in every iteration. This leads to quadratic time complexity and high memory pressure."
+  codeSnippetBefore: |
+    String s = "";
+    for (String part : parts) {
+        s += part;
+    }
+  codeSnippetAfter: |
+    StringBuilder sb = new StringBuilder();
+    for (String part : parts) {
+        sb.append(part);
+    }
+    String s = sb.toString();
+
+PRIMITIVE_BOXING:
+  bigO: "O(n)"
+  description: "Using wrapper types like Integer or Double in loops causes 'boxing' on every modification, creating millions of short-lived objects that trigger frequent Garbage Collection."
+  codeSnippetBefore: |
+    Integer counter = 0;
+    while (counter < 1000) {
+        counter++;
+    }
+  codeSnippetAfter: |
+    int counter = 0;
+    while (counter < 1000) {
+        counter++;
+    }
+
+UNCLOSED_RESOURCE:
+  bigO: "N/A"
+  description: "Holding I/O resources open prevent the OS from entering energy-saving sleep states and can cause system resource exhaustion."
+  codeSnippetBefore: |
+    FileInputStream fis = new FileInputStream("file.txt");
+    // read file ...
+    fis.close(); // Not safe if exception occurs
+  codeSnippetAfter: |
+    try (FileInputStream fis = new FileInputStream("file.txt")) {
+        // read file ...
+    } // Automatically closed safely
+
+LINKEDLIST_USAGE:
+  bigO: "O(n)"
+  description: "LinkedList uses separate 'Node' objects for every element, causing highly fragmented memory. This leads to frequent CPU cache misses and higher energy consumption compared to the contiguous memory of ArrayList."
+  codeSnippetBefore: |
+    List<String> list = new LinkedList<>();
+    list.add("data");
+  codeSnippetAfter: |
+    List<String> list = new ArrayList<>();
+    list.add("data");
+
+LEGACY_SYNCHRONIZED:
+  bigO: "O(1) with lock"
+  description: "Legacy collections like Vector, Hashtable, and Stack are internally synchronized on every operation. This prevents the CPU from performing optimizations and wastes energy on unnecessary thread-locking even in single-threaded scenarios."
+  codeSnippetBefore: |
+    Vector<String> items = new Vector<>();
+    Hashtable<String, String> map = new Hashtable<>();
+  codeSnippetAfter: |
+    List<String> items = new ArrayList<>();
+    Map<String, String> map = new HashMap<>();
+
+MAP_EFFICIENCY:
+  bigO: "O(log n)"
+  description: "Tree-based collections (TreeMap/TreeSet) have higher computational overhead and memory footprint than Hash-based collections. Use them only if you specifically need the elements to be sorted."
+  codeSnippetBefore: |
+    Map<String, String> map = new TreeMap<>();
+  codeSnippetAfter: |
+    Map<String, String> map = new HashMap<>();

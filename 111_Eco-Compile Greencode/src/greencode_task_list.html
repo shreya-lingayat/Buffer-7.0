@@ -1,0 +1,181 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:1rem 0 2rem}
+.layer-block{margin-bottom:2rem}
+.layer-header{display:flex;align-items:center;gap:10px;margin-bottom:.75rem;padding-bottom:.4rem;border-bottom:.5px solid var(--color-border-tertiary)}
+.layer-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.layer-title{font-size:13px;font-weight:500;color:var(--color-text-primary);letter-spacing:.01em}
+.layer-count{font-size:11px;color:var(--color-text-tertiary);margin-left:auto}
+.task{display:flex;align-items:flex-start;gap:10px;padding:.55rem .75rem;border-radius:var(--border-radius-md);margin-bottom:.35rem;background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);cursor:pointer;transition:background .15s}
+.task:hover{background:var(--color-background-secondary)}
+.task.done{opacity:.5}
+.task.done .task-title{text-decoration:line-through}
+.task-num{font-size:11px;font-weight:500;color:var(--color-text-tertiary);min-width:28px;padding-top:2px;font-variant-numeric:tabular-nums}
+.task-body{flex:1;min-width:0}
+.task-title{font-size:13px;color:var(--color-text-primary);line-height:1.4}
+.task-sub{font-size:11px;color:var(--color-text-secondary);margin-top:2px;line-height:1.4}
+.task-check{width:16px;height:16px;border:.5px solid var(--color-border-secondary);border-radius:4px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s}
+.task-check.checked{background:var(--color-text-success,#1D9E75);border-color:var(--color-text-success,#1D9E75)}
+.task-check.checked::after{content:'';display:block;width:8px;height:5px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg) translate(1px,-1px)}
+.badge{display:inline-block;font-size:10px;font-weight:500;padding:1px 6px;border-radius:3px;margin-left:6px;vertical-align:middle}
+.b-p0{background:#E1F5EE;color:#085041}
+.b-p1{background:#FAEEDA;color:#633806}
+.b-p2{background:#F1EFE8;color:#444441}
+.progress-bar{height:3px;border-radius:2px;background:var(--color-border-tertiary);margin-bottom:1.5rem;overflow:hidden}
+.progress-fill{height:100%;background:#1D9E75;border-radius:2px;transition:width .3s}
+.summary{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.5rem .75rem;font-size:12px;color:var(--color-text-secondary)}
+.stat span{font-size:16px;font-weight:500;color:var(--color-text-primary);display:block}
+</style>
+
+<div class="wrap">
+<h2 class="sr-only">GreenCode project task list, organized by layer with completion tracking</h2>
+
+<div class="summary" id="summary">
+  <div class="stat"><span id="s-done">0</span>completed</div>
+  <div class="stat"><span id="s-total">0</span>total tasks</div>
+  <div class="stat"><span id="s-pct">0%</span>progress</div>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+
+<div id="tasks-root"></div>
+</div>
+
+<script>
+const layers = [
+  {
+    id:'infra', label:'Infrastructure & setup', color:'#888780',
+    tasks:[
+      {id:'I1',p:'P0',title:'Initialise Git monorepo',sub:'Create /frontend and /backend folders, add root .gitignore'},
+      {id:'I2',p:'P0',title:'Scaffold Spring Boot project',sub:'spring initializr: Java 21, Maven, Spring Web, DevTools'},
+      {id:'I3',p:'P0',title:'Scaffold React + Vite project',sub:'npm create vite@latest frontend -- --template react, add Tailwind v4'},
+      {id:'I4',p:'P0',title:'Configure CORS in Spring Boot',sub:'Allow http://localhost:5173 for local dev'},
+    ]
+  },
+  {
+    id:'ast', label:'AST parsing & analysis engine', color:'#7F77DD',
+    tasks:[
+      {id:'A1',p:'P0',title:'Add JavaParser dependency',sub:'pom.xml: com.github.javaparser:javaparser-symbol-solver-core:3.x'},
+      {id:'A2',p:'P0',title:'Create AnalysisService class',sub:'Single public method: AnalysisResult analyze(String sourceCode)'},
+      {id:'A3',p:'P0',title:'Implement NestedLoopVisitor',sub:'Extend VoidVisitorAdapter, detect ForStatement/WhileStatement nesting depth ≥ 2'},
+      {id:'A4',p:'P0',title:'Implement LoopInvariantVisitor',sub:'Flag method calls inside loops whose operands are unmodified in loop body'},
+      {id:'A5',p:'P0',title:'Implement BusyWaitVisitor',sub:'Flag loops with empty body or body containing only a condition check, no sleep/yield'},
+      {id:'A6',p:'P0',title:'Build SmellResult model',sub:'Fields: smellType, lineNumber, severity (HIGH/MEDIUM/LOW), suggestionKey'},
+      {id:'A7',p:'P0',title:'Implement GreenScoreCalculator',sub:'Weighted formula: score = 100 − Σ(severity_weight × count) / totalLines × 100'},
+      {id:'A8',p:'P0',title:'Map score to grade (A+–F)',sub:'A+:90–100, A:80–89, B:70–79, C:60–69, D:50–59, F:<50'},
+      {id:'A9',p:'P1',title:'Implement CO₂Estimator',sub:'co2g = smellCount × avgExtraCycles × powerPerCycle × emissionFactor (AWS us-east-1)'},
+      {id:'A10',p:'P0',title:'Write unit tests for all 3 visitors',sub:'JUnit 5: test positive detection + zero false positives on clean code'},
+    ]
+  },
+  {
+    id:'persistence', label:'Data persistence', color:'#888780',
+    tasks:[
+      {id:'D1',p:'P0',title:'Create suggestions.yaml',sub:'src/main/resources/suggestions.yaml — keys: NESTED_LOOP, LOOP_INVARIANT, BUSY_WAIT'},
+      {id:'D2',p:'P0',title:'Define SuggestionEntry schema',sub:'Fields per key: bigO (before/after), description, codeSnippetBefore, codeSnippetAfter'},
+      {id:'D3',p:'P0',title:'Implement SuggestionLoader',sub:'@Component that reads suggestions.yaml into a Map<String, SuggestionEntry> at startup'},
+    ]
+  },
+  {
+    id:'backend', label:'Backend (Spring Boot REST API)', color:'#D85A30',
+    tasks:[
+      {id:'B1',p:'P0',title:'Define AnalysisResult DTO',sub:'Fields: grade, score, smells (List<SmellResult>), co2EstimateGrams, modelAssumptions'},
+      {id:'B2',p:'P0',title:'Create AnalyzeController',sub:'POST /analyze — accepts MultipartFile, returns AnalysisResult as JSON'},
+      {id:'B3',p:'P0',title:'Wire AnalysisService into controller',sub:'Inject service, call analyze(), attach suggestions from SuggestionLoader'},
+      {id:'B4',p:'P0',title:'Add file validation',sub:'Reject non-.java files and files > 200 KB with 400 response'},
+      {id:'B5',p:'P0',title:'Add global exception handler',sub:'@ControllerAdvice returning { error, message } JSON on parse failures'},
+      {id:'B6',p:'P1',title:'Add response caching (optional)',sub:'Cache analysis result by file hash to avoid re-parsing identical uploads'},
+    ]
+  },
+  {
+    id:'frontend', label:'Frontend (React + Tailwind)', color:'#378ADD',
+    tasks:[
+      {id:'F1',p:'P0',title:'Build FileUploadZone component',sub:'Drag-and-drop + click-to-browse, accepts .java only, shows filename on selection'},
+      {id:'F2',p:'P0',title:'Implement API call to POST /analyze',sub:'useEffect on file select; show spinner while pending; handle error states'},
+      {id:'F3',p:'P0',title:'Build GreenScoreBadge component',sub:'Large grade letter (A+–F) + numeric score, colour-coded by band'},
+      {id:'F4',p:'P0',title:'Build SmellList component',sub:'Renders list of SmellResult: type pill, line number, severity badge, toggle for fix snippet'},
+      {id:'F5',p:'P0',title:'Build CodeSnippetDiff component',sub:'Side-by-side before/after code blocks with Big O annotation label'},
+      {id:'F6',p:'P1',title:'Build CO₂EstimateCard component',sub:'Shows X g CO₂ estimate + one-line model assumption footnote'},
+      {id:'F7',p:'P1',title:'Build DataFlowGraph component',sub:'React Flow canvas; nodes = flagged statements, edges = data flow; read-only'},
+      {id:'F8',p:'P0',title:'Assemble Dashboard page',sub:'FileUploadZone → GreenScoreBadge + SmellList + CO₂Card + DataFlowGraph'},
+      {id:'F9',p:'P0',title:'Add empty/error/loading states',sub:'Skeleton loaders while fetching; error banner on API failure; empty state on no smells'},
+    ]
+  },
+  {
+    id:'deploy', label:'Deployment', color:'#1D9E75',
+    tasks:[
+      {id:'DEP1',p:'P0',title:'Create Railway project for backend',sub:'Connect GitHub repo /backend, set PORT env var, deploy Spring Boot fat JAR'},
+      {id:'DEP2',p:'P0',title:'Set BACKEND_URL env var in frontend',sub:'VITE_API_URL=https://<railway-url> in Vercel environment settings'},
+      {id:'DEP3',p:'P0',title:'Deploy frontend to Vercel',sub:'Connect GitHub repo /frontend, build command: vite build, output: dist'},
+      {id:'DEP4',p:'P0',title:'Smoke test end-to-end',sub:'Upload a sample .java file with all 3 smell types, verify score + suggestions render'},
+    ]
+  }
+];
+
+const state = {};
+let totalCount = 0;
+
+function render(){
+  const root = document.getElementById('tasks-root');
+  root.innerHTML = '';
+  let doneCount = 0;
+
+  layers.forEach(layer => {
+    const block = document.createElement('div');
+    block.className = 'layer-block';
+
+    const hdr = document.createElement('div');
+    hdr.className = 'layer-header';
+    const dot = document.createElement('div');
+    dot.className = 'layer-dot';
+    dot.style.background = layer.color;
+    const title = document.createElement('div');
+    title.className = 'layer-title';
+    title.textContent = layer.label;
+    const cnt = document.createElement('div');
+    cnt.className = 'layer-count';
+    cnt.textContent = layer.tasks.length + ' tasks';
+    hdr.appendChild(dot); hdr.appendChild(title); hdr.appendChild(cnt);
+    block.appendChild(hdr);
+
+    layer.tasks.forEach((t,i) => {
+      const done = !!state[t.id];
+      if(done) doneCount++;
+      const row = document.createElement('div');
+      row.className = 'task' + (done?' done':'');
+      row.onclick = () => { state[t.id] = !state[t.id]; render(); };
+
+      const num = document.createElement('div');
+      num.className = 'task-num';
+      num.textContent = (i+1).toString().padStart(2,'0');
+
+      const body = document.createElement('div');
+      body.className = 'task-body';
+      const titleEl = document.createElement('div');
+      titleEl.className = 'task-title';
+      titleEl.innerHTML = t.title + '<span class="badge ' + (t.p==='P0'?'b-p0':t.p==='P1'?'b-p1':'b-p2') + '">' + t.p + '</span>';
+      const subEl = document.createElement('div');
+      subEl.className = 'task-sub';
+      subEl.textContent = t.sub;
+      body.appendChild(titleEl); body.appendChild(subEl);
+
+      const chk = document.createElement('div');
+      chk.className = 'task-check' + (done?' checked':'');
+
+      row.appendChild(num); row.appendChild(body); row.appendChild(chk);
+      block.appendChild(row);
+    });
+
+    root.appendChild(block);
+  });
+
+  const pct = totalCount > 0 ? Math.round(doneCount/totalCount*100) : 0;
+  document.getElementById('s-done').textContent = doneCount;
+  document.getElementById('s-total').textContent = totalCount;
+  document.getElementById('s-pct').textContent = pct + '%';
+  document.getElementById('prog').style.width = pct + '%';
+}
+
+layers.forEach(l => totalCount += l.tasks.length);
+render();
+</script>

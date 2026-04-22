@@ -1,0 +1,177 @@
+
+<style>
+:root { --green: #1D9E75; --green-light: #E1F5EE; --green-dark: #085041; --amber: #BA7517; --amber-light: #FAEEDA; --red-light: #FCEBEB; --red: #A32D2D; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.prd { padding: 1.5rem 0; }
+.badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 4px; letter-spacing: .3px; }
+.b-green  { background: var(--green-light); color: var(--green-dark); }
+.b-amber  { background: var(--amber-light); color: #633806; }
+.b-gray   { background: var(--color-background-secondary); color: var(--color-text-secondary); }
+.section  { margin-bottom: 2rem; }
+.section-title { font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--color-text-secondary); margin-bottom: .75rem; padding-bottom: .4rem; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.card     { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: .75rem; }
+.card-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: .25rem; display: flex; align-items: center; gap: 8px; }
+.card-sub { font-size: 13px; color: var(--color-text-secondary); line-height: 1.5; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .75rem; }
+ul.items { list-style: none; padding: 0; }
+ul.items li { font-size: 13px; color: var(--color-text-secondary); padding: 3px 0 3px 14px; position: relative; line-height: 1.5; }
+ul.items li::before { content: "—"; position: absolute; left: 0; color: var(--color-border-primary); }
+.metric-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: .75rem 1rem; }
+.metric-val { font-size: 20px; font-weight: 500; color: var(--color-text-primary); }
+.metric-label { font-size: 12px; color: var(--color-text-secondary); margin-top: 2px; }
+.priority-row { display: flex; align-items: flex-start; gap: 10px; padding: 6px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.priority-row:last-child { border-bottom: none; }
+.priority-label { font-size: 13px; color: var(--color-text-primary); flex: 1; }
+.priority-sub   { font-size: 12px; color: var(--color-text-secondary); margin-top: 1px; }
+.story-card { border-left: 2px solid var(--green); }
+.arch-row { display: flex; gap: 8px; align-items: center; padding: 5px 0; }
+.arch-layer { font-size: 13px; font-weight: 500; min-width: 90px; color: var(--color-text-primary); }
+.arch-detail { font-size: 12px; color: var(--color-text-secondary); }
+</style>
+
+<div class="prd">
+
+<div class="section">
+  <div class="section-title">Product overview</div>
+  <div class="card">
+    <div class="card-title">GreenCode — AST-Powered Sustainable Static Analyzer</div>
+    <div class="card-sub" style="margin-bottom:.5rem">A Java-based static analysis tool that parses source code into an Abstract Syntax Tree, detects "energy smell" patterns, and scores code on algorithmic efficiency and estimated carbon impact.</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <span class="badge b-green">MVP scope</span>
+      <span class="badge b-gray">Java backend</span>
+      <span class="badge b-gray">React frontend</span>
+      <span class="badge b-amber">ESG-oriented</span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Goals</div>
+  <div class="grid2">
+    <div class="card"><div class="card-title">Business goal</div><div class="card-sub">Enable developers and enterprises to measure and reduce the "carbon debt" of their codebases before deployment, supporting ESG commitments and reducing cloud compute costs.</div></div>
+    <div class="card"><div class="card-title">Product goal</div><div class="card-sub">Ship an MVP that detects the top 3 energy smell categories via AST analysis and surfaces a Green Score with actionable refactor suggestions — no ML, no cloud inference required.</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Target users</div>
+  <div class="grid3">
+    <div class="card"><div class="card-title">🧑‍💻 Developer / student</div><div class="card-sub">Wants to learn the energy cost of their logic and write better code.</div></div>
+    <div class="card"><div class="card-title">🏢 Tech lead / CIO</div><div class="card-sub">Needs to measure and reduce carbon debt across large codebases for ESG reporting.</div></div>
+    <div class="card"><div class="card-title">🔬 GreenTech researcher</div><div class="card-sub">Quantifies how software design patterns affect power consumption and hardware degradation.</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">MVP feature list — prioritised</div>
+  <div class="card">
+    <div class="priority-row">
+      <span class="badge b-green" style="min-width:50px;text-align:center">P0</span>
+      <div><div class="priority-label">AST parsing engine</div><div class="priority-sub">Parse uploaded Java source files into an AST using JavaParser. Foundation for all analysis.</div></div>
+    </div>
+    <div class="priority-row">
+      <span class="badge b-green" style="min-width:50px;text-align:center">P0</span>
+      <div><div class="priority-label">Energy smell detection (3 types)</div><div class="priority-sub">Detect: (1) O(n²) nested loops, (2) loop-invariant redundant computation, (3) busy-wait / empty polling loops.</div></div>
+    </div>
+    <div class="priority-row">
+      <span class="badge b-green" style="min-width:50px;text-align:center">P0</span>
+      <div><div class="priority-label">Green Score (A+ to F)</div><div class="priority-sub">Single weighted grade derived from smell count, severity, and code size. Shown in dashboard on file upload.</div></div>
+    </div>
+    <div class="priority-row">
+      <span class="badge b-green" style="min-width:50px;text-align:center">P0</span>
+      <div><div class="priority-label">Refactor suggestions</div><div class="priority-sub">For each detected smell, show a minimal before/after code snippet with Big O annotation.</div></div>
+    </div>
+    <div class="priority-row">
+      <span class="badge b-amber" style="min-width:50px;text-align:center">P1</span>
+      <div><div class="priority-label">CO₂ estimation</div><div class="priority-sub">Theoretical model: "If this function runs 1M times on a standard AWS t3.medium, it emits ~X g CO₂." Based on published cloud emission coefficients.</div></div>
+    </div>
+    <div class="priority-row">
+      <span class="badge b-amber" style="min-width:50px;text-align:center">P1</span>
+      <div><div class="priority-label">Data flow graph (D3.js)</div><div class="priority-sub">Visual execution-path graph of flagged code blocks. Nodes = statements, edges = data flow.</div></div>
+    </div>
+    <div class="priority-row">
+      <span class="badge b-gray" style="min-width:50px;text-align:center">P2</span>
+      <div><div class="priority-label">Multi-file / project scan</div><div class="priority-sub">Upload a zip; aggregate scores per class and at project level. Out of MVP scope.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">User stories — core journeys</div>
+  <div class="card story-card">
+    <div class="card-title"><span class="badge b-gray">DEV-01</span></div>
+    <div class="card-sub">"As a developer, I upload a Java file and immediately see a Green Score and a list of energy smells with line numbers so I can fix them."<br><br><strong style="font-size:12px;color:var(--color-text-primary)">Acceptance:</strong> <span style="font-size:12px">Score renders in &lt; 3s. Each smell has: type, line number, severity badge, and a code snippet showing the fix.</span></div>
+  </div>
+  <div class="card story-card">
+    <div class="card-title"><span class="badge b-gray">DEV-02</span></div>
+    <div class="card-sub">"As a developer, I can see the Big O complexity of my submitted code so I understand <em>why</em> it scores poorly."<br><br><strong style="font-size:12px;color:var(--color-text-primary)">Acceptance:</strong> <span style="font-size:12px">Per-method complexity label shown next to each flagged block.</span></div>
+  </div>
+  <div class="card story-card">
+    <div class="card-title"><span class="badge b-gray">LEAD-01</span></div>
+    <div class="card-sub">"As a tech lead, I can see a theoretical CO₂ estimate so I can include it in an ESG report."<br><br><strong style="font-size:12px;color:var(--color-text-primary)">Acceptance:</strong> <span style="font-size:12px">CO₂ estimate displayed per file with an explanation of the model assumptions.</span></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Energy smells — detection rules</div>
+  <div class="card">
+    <div class="priority-row">
+      <span class="badge b-green" style="min-width:90px;text-align:center">Nested loop</span>
+      <div><div class="priority-label">O(n²) or worse</div><div class="priority-sub">Flag: two or more nested ForStatement / WhileStatement nodes in the AST. Suggest: HashMap / sort-based O(n log n) approach.</div></div>
+    </div>
+    <div class="priority-row">
+      <span class="badge b-amber" style="min-width:90px;text-align:center">Loop invariant</span>
+      <div><div class="priority-label">Redundant computation</div><div class="priority-sub">Flag: method call or expression inside a loop whose operands are not modified in the loop body. Suggest: hoist outside loop.</div></div>
+    </div>
+    <div class="priority-row">
+      <span class="badge b-gray" style="min-width:90px;text-align:center">Busy wait</span>
+      <div><div class="priority-label">Empty / polling loop</div><div class="priority-sub">Flag: loop body is empty or contains only a condition check with no yield/sleep. Suggest: Thread.sleep(), wait/notify, or event-driven pattern.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Architecture — MVP</div>
+  <div class="card">
+    <div class="arch-row"><div class="arch-layer">Browser UI</div><div class="arch-detail">React + D3.js — file upload, Green Score dashboard, smell list, data flow graph</div></div>
+    <div style="height:.5px;background:var(--color-border-tertiary);margin:4px 0 4px 98px"></div>
+    <div class="arch-row"><div class="arch-layer">REST API</div><div class="arch-detail">Spring Boot — exposes <code style="font-size:11px">POST /analyze</code> endpoint, returns JSON analysis result</div></div>
+    <div style="height:.5px;background:var(--color-border-tertiary);margin:4px 0 4px 98px"></div>
+    <div class="arch-row"><div class="arch-layer">Analysis engine</div><div class="arch-detail">Java — JavaParser AST traversal, smell detectors (Visitor pattern), Green Score calculator, CO₂ estimator</div></div>
+    <div style="height:.5px;background:var(--color-border-tertiary);margin:4px 0 4px 98px"></div>
+    <div class="arch-row"><div class="arch-layer">Suggestions DB</div><div class="arch-detail">Static JSON / YAML — maps smell type → refactor snippet + Big O annotation (no ML required for MVP)</div></div>
+  </div>
+  <div class="card-sub" style="margin-top:.25rem;font-size:12px;padding:0 .25rem">
+    Core logic constraint: AST parsing, smell detection, scoring, and CO₂ calculation are Java-only (no Python, no Node.js in the backend).
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Success metrics</div>
+  <div class="grid3">
+    <div class="metric-card"><div class="metric-val">&lt; 3s</div><div class="metric-label">Analysis time per file (&lt; 500 LOC)</div></div>
+    <div class="metric-card"><div class="metric-val">≥ 85%</div><div class="metric-label">Smell detection precision (no false positives)</div></div>
+    <div class="metric-card"><div class="metric-val">A–F</div><div class="metric-label">Score bands must correlate with real complexity</div></div>
+    <div class="metric-card" style="margin-top:.75rem"><div class="metric-val">≥ 3</div><div class="metric-label">Smell types detected in MVP v1</div></div>
+    <div class="metric-card" style="margin-top:.75rem"><div class="metric-val">1-click</div><div class="metric-label">Time to get a result from file upload</div></div>
+    <div class="metric-card" style="margin-top:.75rem"><div class="metric-val">100%</div><div class="metric-label">Smells include actionable refactor snippet</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Out of scope — MVP</div>
+  <div class="card">
+    <ul class="items">
+      <li>Support for languages other than Java</li>
+      <li>ML-based smell detection or AI code generation</li>
+      <li>CI/CD pipeline integration (GitHub Action, Jenkins plugin)</li>
+      <li>Multi-file project upload and aggregate scoring</li>
+      <li>User accounts, history, or saved reports</li>
+      <li>Real-time CPU/energy profiling (runtime instrumentation)</li>
+    </ul>
+  </div>
+</div>
+
+</div>
